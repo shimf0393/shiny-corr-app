@@ -1,22 +1,6 @@
 
 server_map <- function(input, output,session) {
-   #gs4_auth(path = 'credtials shinyapp-cf6f6eb8eb15.json')
 
-  #loadData <- function() {
-    # Read the data
-  # read_sheet("https://docs.google.com/spreadsheets/d/1NT8jM6TL_bxl_24Ay8kRBsS-scn98Dgsfj2g8L_jnts/edit#gid=0")
-  #}
-  # call the server part
-  #check_credentials returns a function to authenticate users
-   # res_auth <- secure_server(
-   #   check_credentials = check_credentials(loadData())
-   # )
-   # 
-   # output$auth_output <- renderPrint({
-   #   reactiveValuesToList(res_auth)
-   # }) 
-  
-  
   choice_names <<- c("מדד פריפריאליות","מחיר מר","שנת בנייה","רגישות ססמוגרפית","דירוג חום- אי נוחות","מבנים בפשט הצפה", "דרוג סוציו-אקונומי ברמת אס", "דרוג סוציו-אקונומי ברמת ישוב","מקבלי הבטחת הכנסה", "מקבלי השלמת הכנסה","מקבלי אבטלה","מקבלי סיוע בדיור","דירות בדיור ציבורי","מחלות עוני","עלייה מאתיופיה")
   full_data<<-read.csv("data/complete_data.csv", header = TRUE, row.names = NULL, stringsAsFactors = FALSE, encoding = "UTF-8")
   grade_for_map<-"total_grade_cat1"

@@ -19,7 +19,7 @@ library(shinymanager)
 library(googlesheets4)
 
 options(spinner.color="#0275D8", spinner.color.background="#ffffff", spinner.size=2)
-ui_map <-  #secure_app(
+ui_map <-  
   fluidPage(
   tags$head(
     tags$style(
@@ -139,6 +139,6 @@ ui_map <-  #secure_app(
          
   )
 )
-#)
+
 
 
