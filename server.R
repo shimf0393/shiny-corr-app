@@ -133,7 +133,9 @@ server <- function(input, output, session) {
             
             .leaflet-popup-content{direction:rtl;text-align:center;}
             .corr_label{/*display:none;*/padding-top:3%;font-weight:bold;font-size:110%;color:darkcyan;}
-            #corr_between_vars{width:50%;/*background-color:white;color:black;*/font-weight:bold;text-align:center;}
+            .col-sm-6.corr{padding-top:3%;}
+            #corr_between_vars{width:50%;background-color:white;font-weight:bold;text-align:right;font-size:110%;}
+            #corr_value{width:50%;font-weight:bold;text-align:left;font-size:110%;}
             }
              "
                  
@@ -143,26 +145,26 @@ server <- function(input, output, session) {
         
         fluidRow(class="Toprow", 
                  div(box(
-                   checkboxGroupInput("migzar","���/� ����",choices =seq(1:6) ,selected =seq(1:6) ,inline = TRUE),
+                   checkboxGroupInput("migzar","בחר/י מגזר",choices =seq(1:6) ,selected =seq(1:6) ,inline = TRUE),
                    width = 4),
                    direction="rtl",align="center"),
-                 div(box(column(3,div(sliderInput("age_se","��� ����",1930,2020,value = c(1930,2020),step = 5,sep =""),align="center")),
-                         column(9,div(numericRangeInput("residents", "���� ������ ����", c(2000,1000000), width = 250, separator = " - "),align="center")),
+                 div(box(column(3,div(sliderInput("age_se","שנת בניה",1930,2020,value = c(1930,2020),step = 5,sep =""),align="center")),
+                         column(9,div(numericRangeInput("residents", "מספר תושבים בעיר", c(2000,1000000), width = 250, separator = " - "),align="center")),
                          width = 5),
                      direction="rtl",align="right",style="font-size: 100%;",height="60%"
                  ),
                  box(
-                   div(downloadButton("downloadData","����� ������",icon = icon("file-download")),align="right",style="font-size:120%; font-weight:bold;")#)
+                   div(downloadButton("downloadData","ייצוא נתונים",icon = icon("file-download")),align="right",style="font-size:120%; font-weight:bold;")#)
                    , width = 3),
-                 box(fluidRow(titlePanel(div(actionLink("re_calc", "����� ����", icon= icon("calculator"),class = "my_class"),align="center", style="font-size:75%;font-weight:bold;")))
+                 box(fluidRow(titlePanel(div(actionLink("re_calc", "חישוב מחדש", icon= icon("calculator"),class = "my_class"),align="center", style="font-size:75%;font-weight:bold;")))
                      ,width = 3),
                  fluidRow(class="Midrow",
                           box(class="line_ipus",
                               width = 12,
                               column(9,div(class="switch_btn",
-                                           tags$span("����������� �����:",style="font-size:110%;font-weight:bold;margin-top:0px;margin-bottom:0px;margin-left:0%;direction:rtl;align:left;color:seagreen;"),
-                                           prettySwitch(inputId = "calc_method",label = "����� ����",value = TRUE, inline = TRUE,status = "info",slim = FALSE),
-                                           tags$span("��������"),
+                                           tags$span("מתודולוגיית חישוב:",style="font-size:110%;font-weight:bold;margin-top:0px;margin-bottom:0px;margin-left:0%;direction:rtl;align:left;color:seagreen;"),
+                                           prettySwitch(inputId = "calc_method",label = "חלוקת טווח",value = TRUE, inline = TRUE,status = "info",slim = FALSE),
+                                           tags$span("עשירונים"),
                               ),style="font-size:80%;padding-right:2%;",align="right"),
                               column(3,actionLink("blank","")),
                           )
@@ -171,13 +173,13 @@ server <- function(input, output, session) {
         column(width=9,withSpinner(leafletOutput("map", width = "100%", height = "750px"),type=3)),
         column(class="sliders",width = 3,
                column(class="p1",width = 6,imageOutput("reds_p")),
-               column(class="var1",width = 6,selectInput("v1", "����� 1",
+               column(class="var1",width = 6,selectInput("v1", "משתנה 1",
                                                          choice = c(seq(1:15)),
                                                          multiple = FALSE)),
                column(class="p2",width = 6,imageOutput("blues_p")),
-               column(class="var2",width = 6,selectInput("v2", "����� 2",choice = c(seq(1:15)), multiple = FALSE)),
-               column(class="corr",width = 6,verbatimTextOutput("corr_between_vars")),
-               column(class="corr_label",width = 6,"���� ����� ��� �������:")
+               column(class="var2",width = 6,selectInput("v2", "משתנה 2",choice = c(seq(1:15)), multiple = FALSE)),
+               column(class="corr",width = 6,htmlOutput("corr_between_vars",inline = TRUE),htmlOutput("corr_value",inline = TRUE)),
+               column(class="corr_label",width = 6,"מקדם המתאם בין המשתנים:")
                
                
                
@@ -191,7 +193,7 @@ server <- function(input, output, session) {
     }
   })
   
-  choice_names <<- c("��� �����������","���� ��","��� �����", "������ ���������", "����� ���- �� �����", "����� ���� ����","���� �����-������� ���� ��","���� �����-������� ���� ����", "����� ����� �����", "����� ����� �����", "����� �����", "����� ���� �����", "����� ����� ������", "����� ����","����� ��������")
+  choice_names <<- c("מדד פריפריאליות","מחיר מר","שנת בנייה", "רגישות ססמוגרפית", "דירוג חום- אי נוחות", "מבנים בפשט הצפה","דרוג סוציו-אקונומי ברמת אס","דרוג סוציו-אקונומי ברמת ישוב", "מקבלי הבטחת הכנסה", "מקבלי השלמת הכנסה", "מקבלי אבטלה", "מקבלי סיוע בדיור", "דירות בדיור ציבורי", "מחלות עוני","עלייה מאתיופיה")
   full_data<<-read.csv("data/complete_data.csv", header = TRUE, row.names = NULL, stringsAsFactors = FALSE, encoding = "UTF-8")
   #full_data<<-read.csv("c:/TEST/corr_app/data/complete_data.csv", header = TRUE, row.names = NULL, stringsAsFactors = FALSE, encoding = "UTF-8")
   
@@ -199,9 +201,9 @@ server <- function(input, output, session) {
   
   observeEvent(USER$login == TRUE,
                lapply(1:15,function(i)
-               { updateCheckboxGroupInput(session,"migzar","���/� ����",selected =seq(1:6) ,inline = TRUE, choiceNames=migzar_names, choiceValues= seq(1:6) )
-                 updateSliderInput(session,"age_se", "��� ����",min_year,max_year,value = c(min_year,max_year),step = 5)
-                 updateSelectInput(session,"v1","����� 1",choices =choice_names)
+               { updateCheckboxGroupInput(session,"migzar","בחר/י מגזר",selected =seq(1:6) ,inline = TRUE, choiceNames=migzar_names, choiceValues= seq(1:6) )
+                 updateSliderInput(session,"age_se", "שנת בניה",min_year,max_year,value = c(min_year,max_year),step = 5)
+                 updateSelectInput(session,"v1","משתנה 1",choices =choice_names)
                }))
   
   
@@ -209,24 +211,24 @@ server <- function(input, output, session) {
   full_data$residents_se<-as.numeric(full_data$residents_se)
   full_data$migzar<-1
   for (i in 1:nrow(full_data))
-  {if(full_data$demogrphia[i]=="�����") {full_data$migzar[i]<-2}
-    if(full_data$demogrphia[i]=="�����- ����") {full_data$migzar[i]<-3}
-    if(full_data$demogrphia[i]=="�����") {full_data$migzar[i]<-4}
-    if(full_data$demogrphia[i]=="����") {full_data$migzar[i]<-5}
-    if(full_data$demogrphia[i]=="�'����") {full_data$migzar[i]<-6}} 
+  {if(full_data$demogrphia[i]=="דרוזי") {full_data$migzar[i]<-2}
+    if(full_data$demogrphia[i]=="יהודי- כללי") {full_data$migzar[i]<-3}
+    if(full_data$demogrphia[i]=="בדואי") {full_data$migzar[i]<-4}
+    if(full_data$demogrphia[i]=="חרדי") {full_data$migzar[i]<-5}
+    if(full_data$demogrphia[i]=="צ'רקסי") {full_data$migzar[i]<-6}} 
   
   
   full_data$x<-as.numeric(full_data$x)
   full_data$y<-as.numeric(full_data$y)
   migzar_names<-unique(full_data$demogrphia)
   
-  ############׳¢׳“׳›׳•׳ ׳”׳¨׳©׳™׳׳•׳× ׳׳©׳׳•׳×
+  ############׳³ֲ¢׳³ג€׳³ג€÷׳³ג€¢׳³ֲ ׳³ג€׳³ֲ¨׳³ֲ©׳³ג„¢׳³ֲ׳³ג€¢׳³ֳ— ׳³ֲ׳³ֲ©׳³ֲ׳³ג€¢׳³ֳ—
   
-  ############׳¨׳₪׳¨׳•׳© ׳¨׳©׳™׳׳” ׳©׳ ׳׳©׳×׳ ׳” 2 ׳‘׳”׳×׳׳ ׳׳׳©׳×׳ ׳” 1
+  ############׳³ֲ¨׳³ג‚×׳³ֲ¨׳³ג€¢׳³ֲ© ׳³ֲ¨׳³ֲ©׳³ג„¢׳³ֲ׳³ג€ ׳³ֲ©׳³ֲ ׳³ֲ׳³ֲ©׳³ֳ—׳³ֲ ׳³ג€ 2 ׳³ג€˜׳³ג€׳³ֳ—׳³ֲ׳³ֲ ׳³ֲ׳³ֲ׳³ֲ©׳³ֳ—׳³ֲ ׳³ג€ 1
   observeEvent(input$v1,lapply(1:15,function(i)
   { if (input$v1==choice_names[i])
   {update_list<-choice_names[-i]
-  updateSelectInput(session,"v2","����� 2",choices = update_list )}}
+  updateSelectInput(session,"v2","משתנה 2",choices = update_list )}}
   ))
   
   
@@ -252,7 +254,7 @@ server <- function(input, output, session) {
   full_data$v15<-as.numeric(full_data$aliya)*(-1)
   n_row<-as.numeric(nrow(full_data))
   
-  #####׳—׳׳•׳§׳× ׳›׳ ׳׳©׳×׳ ׳” ׳׳¢׳©׳™׳¨׳•׳ ׳™׳ ׳׳₪׳™ ׳˜׳•׳•׳—
+  #####׳³ג€”׳³ֲ׳³ג€¢׳³ֲ§׳³ֳ— ׳³ג€÷׳³ֲ ׳³ֲ׳³ֲ©׳³ֳ—׳³ֲ ׳³ג€ ׳³ֲ׳³ֲ¢׳³ֲ©׳³ג„¢׳³ֲ¨׳³ג€¢׳³ֲ ׳³ג„¢׳³ֲ ׳³ֲ׳³ג‚×׳³ג„¢ ׳³ֻ׳³ג€¢׳³ג€¢׳³ג€”
   for (p in 1:15)
   { 
     full_data[[paste0("range_bin",p)]]<-0
@@ -267,7 +269,7 @@ server <- function(input, output, session) {
     }
   }
   
-  #####׳—׳׳•׳§׳× ׳›׳ ׳׳©׳×׳ ׳” ׳׳¢׳©׳™׳¨׳•׳ ׳™׳ ׳׳₪׳™ ׳׳—׳•׳–׳•׳ ׳™׳  
+  #####׳³ג€”׳³ֲ׳³ג€¢׳³ֲ§׳³ֳ— ׳³ג€÷׳³ֲ ׳³ֲ׳³ֲ©׳³ֳ—׳³ֲ ׳³ג€ ׳³ֲ׳³ֲ¢׳³ֲ©׳³ג„¢׳³ֲ¨׳³ג€¢׳³ֲ ׳³ג„¢׳³ֲ ׳³ֲ׳³ג‚×׳³ג„¢ ׳³ֲ׳³ג€”׳³ג€¢׳³ג€“׳³ג€¢׳³ֲ ׳³ג„¢׳³ֲ  
   for (p in 1:15)
   { 
     full_data[[paste0("q_bin",p)]]<-0
@@ -281,7 +283,7 @@ server <- function(input, output, session) {
     }
   }
   
-  ####### ׳׳”׳›׳ ׳™׳¡ ׳₪׳” ׳׳•׳’׳™׳§׳” ׳©׳ ׳—׳׳•׳§׳× ׳¦׳™׳•׳ ׳™׳
+  ####### ׳³ֲ׳³ג€׳³ג€÷׳³ֲ ׳³ג„¢׳³ֲ¡ ׳³ג‚×׳³ג€ ׳³ֲ׳³ג€¢׳³ג€™׳³ג„¢׳³ֲ§׳³ג€ ׳³ֲ©׳³ֲ ׳³ג€”׳³ֲ׳³ג€¢׳³ֲ§׳³ֳ— ׳³ֲ¦׳³ג„¢׳³ג€¢׳³ֲ ׳³ג„¢׳³ֲ
   grade_range<-0
   for(i in seq(10,40,10))
   {for(j in 1:4)
@@ -341,22 +343,51 @@ server <- function(input, output, session) {
     
     data_for_heatmap<<-full_data
     
-    ####׳”׳₪׳¢׳׳× ׳”׳¡׳™׳ ׳•׳ ׳™׳  
+    ####׳³ג€׳³ג‚×׳³ֲ¢׳³ֲ׳³ֳ— ׳³ג€׳³ֲ¡׳³ג„¢׳³ֲ ׳³ג€¢׳³ֲ ׳³ג„¢׳³ֲ  
     data_for_heatmap<<-data_for_heatmap[data_for_heatmap$residents_yeshuv>=input$residents[1] & data_for_heatmap$residents_yeshuv<=input$residents[2],]
     data_for_heatmap<<-data_for_heatmap[data_for_heatmap$migzar%in%input$migzar,]
     data_for_heatmap<<-data_for_heatmap[data_for_heatmap$year_bniya>=input$age_se[1] & data_for_heatmap$year_bniya<=input$age_se[2],]
     
   })
   
+  # corr_vars<-reactive({
+  #   lapply(1:15,function(i)
+  #   { if(input[["v1"]]==choice_names[i]) {p1<<-i}
+  #     if(input[["v2"]]==choice_names[i]) {p2<<-i}})
+  #   round(cor(full_data[,26+p1],full_data[,26+p2],use = "all.obs"),3)})
+  # 
+  # 
+  # output$corr_between_vars<-renderText(corr_vars())
+  
   corr_vars<-reactive({
     lapply(1:15,function(i)
     { if(input[["v1"]]==choice_names[i]) {p1<<-i}
       if(input[["v2"]]==choice_names[i]) {p2<<-i}})
-    round(cor(full_data[,26+p1],full_data[,26+p2],use = "all.obs"),3)})
+    x<-round(cor(full_data[,8+p1],full_data[,8+p2],use = "all.obs"),2)
+  })
   
+  corr_b_vars<-reactive({
+    x<-corr_vars()
+    if (abs(x)<=0.1) {paste("<font color=\"#808080\"><b>","אפסי","</b></font>")}
+    else if (abs(x)<=0.3) {paste("<font color=\"#1CBBDD\"><b>","חלש","</b></font>")}
+    else if (abs(x)<=0.5 & x<0) {paste("<font color=\"#FFA500\"><b>","בינוני","</b></font>")}
+    else {paste("<font color=\"#FF0000\"><b>","חזק","</b></font>")}
+  })
   
-  output$corr_between_vars<-renderText(corr_vars())
+  p_corr_vars<-reactive({
+    x<-corr_vars()
+    if (abs(x)<=0.1 & x<0) {paste("<font color=\"#808080\"><b>","(",abs(x),"-)","</b></font>")}
+    else if (abs(x)<=0.1 & x>=0) {paste("<font color=\"#808080\"><b>","(",x,")","</b></font>")}
+    else if (abs(x)<=0.3 & x<0) {paste("<font color=\"#1CBBDD\"><b>","(",abs(x),"-)","</b></font>")}
+    else if (abs(x)<=0.3 & x>0) {paste("<font color=\"#1CBBDD\"><b>","(",x,")","</b></font>")}
+    else if (abs(x)<=0.5 & x<0) {paste("<font color=\"#FFA500\"><b>","(",abs(x),"-)","</b></font>")}
+    else if (abs(x)<=0.5 & x>0) {paste("<font color=\"#FFA500\"><b>","(",x,")","</b></font>")}
+    else if (abs(x)>0.5 & x<0) {paste("<font color=\"#FF0000\"><b>","(",abs(x),"-)","</b></font>")}
+    else {paste("<font color=\"#FF0000\"><b>"," (",x,")","</b></font>")}
+  })
   
+  output$corr_between_vars<-renderText(corr_b_vars())
+  output$corr_value<-renderText(p_corr_vars())
   observeEvent(
     eventExpr = input$map_zoom, {
       leafletProxy(
@@ -383,12 +414,12 @@ server <- function(input, output, session) {
   
   
   
-  ####׳³ֵ¾׳³ֲ§׳³ֲ¨׳³ֲ ׳³ֵ“׳³ג€™׳³ג€¢׳³ג€׳³ֵ“ ׳³ֲ¨׳³ג€׳³ג„¢׳³ג€¢׳³ֲ¡
+  ####׳³ֲ³ײµֲ¾׳³ֲ³ײ²ֲ§׳³ֲ³ײ²ֲ¨׳³ֲ³ײ²ֲ ׳³ֲ³ײµג€׳³ֲ³׳’ג‚¬ג„¢׳³ֲ³׳’ג‚¬ֲ¢׳³ֲ³׳’ג‚¬ֲ׳³ֲ³ײµג€ ׳³ֲ³ײ²ֲ¨׳³ֲ³׳’ג‚¬ֲ׳³ֲ³׳’ג€ֲ¢׳³ֲ³׳’ג‚¬ֲ¢׳³ֲ³ײ²ֲ¡
   addLegendCustom <- function(map,colors, labels, sizes, opacity = 0.5){
     colorAdditions <- paste0(colors, "; width:", sizes, "px; height:", sizes, "px")
     labelAdditions <- paste0("<div style='display: inline-block;height: ", sizes, "px;margin-top: 4px;line-height: ", sizes, "px;'>", labels, "</div>")
     
-    return(addLegend(map, colors = colorAdditions, labels = labelAdditions, title="���� ������ ����� �������",opacity = opacity))}
+    return(addLegend(map, colors = colorAdditions, labels = labelAdditions, title="מספר תושבים באזור סטטיסטי",opacity = opacity))}
   
   legend_path<-"www/combined_palette_map.jpg"
   #legend_path<-"c:/TEST/corr_app/www/combined_palette_map.jpg"
@@ -396,10 +427,10 @@ server <- function(input, output, session) {
   output$map <- renderLeaflet({
     leaflet()%>%
       addLegendImage(image=legend_path, labels = c(''),width = 150, height = 150,
-                     title = htmltools::tags$div('���� ��� �������',
+                     title = htmltools::tags$div('הקשר בין המשתנים',
                                                  style = 'font-size: 14px; text-align: center;'),
                      position = 'bottomright')%>%
-      addLegendCustom(colors = c("navy", "navy", "navy"), labels = c("�� 1,000", "1,000-10,000", "10,000 �����"), sizes = c(8, 15, 30))%>%
+      addLegendCustom(colors = c("navy", "navy", "navy"), labels = c("עד 1,000", "1,000-10,000", "10,000 ומעלה"), sizes = c(8, 15, 30))%>%
       addTiles()%>%
       setView(lng = 35.1077, lat = 31.80651, zoom = 7)
   })
@@ -446,7 +477,7 @@ server <- function(input, output, session) {
   
   
   
-  ###׳³ֲ§׳³ג€¢׳³ג€˜׳³ֲ¥ ׳³ג€׳³ג„¢׳³ ׳³ֵ¾׳³ג„¢ ׳³ֵ“׳³ֲ¦׳³ג€¢׳³ֲ¨׳³ֵ¡ ׳³ג€׳³ג€׳³ג€¢׳³ֲ¨׳³ג€׳³ג€
+  ###׳³ֲ³ײ²ֲ§׳³ֲ³׳’ג‚¬ֲ¢׳³ֲ³׳’ג‚¬ֻ׳³ֲ³ײ²ֲ¥ ׳³ֲ³׳’ג‚¬ֲ׳³ֲ³׳’ג€ֲ¢׳³ֲ³ ׳³ֲ³ײµֲ¾׳³ֲ³׳’ג€ֲ¢ ׳³ֲ³ײµג€׳³ֲ³ײ²ֲ¦׳³ֲ³׳’ג‚¬ֲ¢׳³ֲ³ײ²ֲ¨׳³ֲ³ײµֲ¡ ׳³ֲ³׳’ג‚¬ֲ׳³ֲ³׳’ג‚¬ֲ׳³ֲ³׳’ג‚¬ֲ¢׳³ֲ³ײ²ֲ¨׳³ֲ³׳’ג‚¬ֲ׳³ֲ³׳’ג‚¬ֲ
   data_for_download<- reactive({
     calc_method()
     updatedData()
@@ -455,13 +486,13 @@ server <- function(input, output, session) {
     else
     {data_for_file<<-data_for_heatmap[order(data_for_heatmap$total_grade_cat2),]}
     base_col<-c(1,3,6,8,25)
-    ###׳¢׳׳•׳“׳•׳× ׳”׳׳©׳×׳ ׳™׳ ׳©׳ ׳‘׳—׳¨׳•
+    ###׳³ֲ¢׳³ֲ׳³ג€¢׳³ג€׳³ג€¢׳³ֳ— ׳³ג€׳³ֲ׳³ֲ©׳³ֳ—׳³ֲ ׳³ג„¢׳³ֲ ׳³ֲ©׳³ֲ ׳³ג€˜׳³ג€”׳³ֲ¨׳³ג€¢
     p_col<-c(9:23)
     c_p_col<-c(p_col[p1],p_col[p2])
-    ####׳¢׳׳•׳“׳•׳× ׳™׳™׳¦׳•׳ ׳¢׳₪׳™ ׳©׳™׳˜׳× ׳”׳—׳™׳©׳•׳‘
+    ####׳³ֲ¢׳³ֲ׳³ג€¢׳³ג€׳³ג€¢׳³ֳ— ׳³ג„¢׳³ג„¢׳³ֲ¦׳³ג€¢׳³ֲ ׳³ֲ¢׳³ג‚×׳³ג„¢ ׳³ֲ©׳³ג„¢׳³ֻ׳³ֳ— ׳³ג€׳³ג€”׳³ג„¢׳³ֲ©׳³ג€¢׳³ג€˜
     if (grade_for_map=="total_grade_cat1") {col_bin<-c(41+p1,41+p2)}
     else {col_bin<-c(56+p1,56+p2)}
-    #####׳›׳׳ ׳”׳¢׳׳•׳“׳•׳×
+    #####׳³ג€÷׳³ֲ׳³ֲ ׳³ג€׳³ֲ¢׳³ֲ׳³ג€¢׳³ג€׳³ג€¢׳³ֳ—
     col_for_download<-c(base_col,c_p_col,col_bin)
     
     data_for_file<<-data_for_file[,col_for_download]
@@ -479,7 +510,7 @@ server <- function(input, output, session) {
     
   )
   
-  ####׳₪׳׳˜׳” ׳©׳ 4 ׳¦׳‘׳¢׳™׳
+  ####׳³ג‚×׳³ֲ׳³ֻ׳³ג€ ׳³ֲ©׳³ֲ 4 ׳³ֲ¦׳³ג€˜׳³ֲ¢׳³ג„¢׳³ֲ
   REDS_path<-"www/REDS4P2.jpg"
   BLUES_path<-"www/BLUES4P2.jpg"
   
